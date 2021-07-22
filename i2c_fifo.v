@@ -1,18 +1,17 @@
 
 // i2c fifo verilog coding
 
-module i2c_fifo 
- #(parameter   FIFO_WIDTH = 15             , // parameter for fifo data width
-	       FIFO_ADDR  = 9)               // parameter for fifo addr
-  (input                       i2c_clock_in, // top module clock signal
-   input                       i2c_reset_in, // active high reset
-   input                       wr_en_in    , // write enable signal data write into fifo
-   input                       rd_en_in    , // read enable signal data read from fifo
-   input      [FIFO_WIDTH-1:0] data_in     , // input addr+data 
-   output reg [FIFO_WIDTH-1:0] data_out    , // output addr+data
-   output                      fifo_full   , // full detection signal
-   output                      fifo_empty    // fifo empty detection signal
-	                                  );
+module i2c_fifo #(parameter         FIFO_WIDTH = 15, // parameter for fifo data width
+	                            FIFO_ADDR  = 9 ) // parameter for fifo addr
+	(input                      i2c_clock_in   , // top module clock signal
+   	input                       i2c_reset_in   , // active high reset
+   	input                       wr_en_in       , // write enable signal data write into fifo
+  	input                       rd_en_in       , // read enable signal data read from fifo
+	input      [FIFO_WIDTH-1:0] data_in        , // input addr+data 
+	output reg [FIFO_WIDTH-1:0] data_out       , // output addr+data
+   	output                      fifo_full      , // full detection signal
+   	output                      fifo_empty       // fifo empty detection signal
+	                                          );
 	
 	// signal declaration fifo depth
 	localparam FIFO_DEPTH = 1 << FIFO_ADDR;
