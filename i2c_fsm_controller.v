@@ -13,7 +13,7 @@ module i2c_fsm_controller(
 	inout            i2c_sda            , // serial data line
 	output           i2c_scl            , // serial clock line
 	output           ready                // master is ready to transfer addr and data
-								              );
+					   );
 								  
 	// parameter declaration for states
 	localparam STATE_IDLE  = 4'd0 ; // idle state
@@ -65,83 +65,83 @@ module i2c_fsm_controller(
 				begin
 					case(state)
 						STATE_IDLE  : begin // at high enable next_state is start else idle
-											if(enable) 
-												begin
-													state <= STATE_START;
-												end
-											else
-												state <= STATE_IDLE;
-										  end   // end idle
+								if(enable) 
+									begin
+										state <= STATE_START;
+									end
+								else
+									state <= STATE_IDLE;
+							      end   // end idle
 										  
 						STATE_START : begin // start state
-											count         <= 4'd7                         ;
-											state         <= STATE_ADDR                   ;
-											saved_addr    <= {fifo_to_fsm_addr_in, rw_bit};
-											saved_data_wr <= fifo_to_fsm_data_in          ;											
-										  end   // end start state
+								count         <= 4'd7                         ;
+								state         <= STATE_ADDR                   ;
+								saved_addr    <= {fifo_to_fsm_addr_in, rw_bit};
+								saved_data_wr <= fifo_to_fsm_data_in          ;											
+							      end   // end start state
 										  
 						STATE_ADDR  : begin // address state
-											if(count == 4'd0)
-												state <= STATE_RACK1;
-											else 
-												begin
-													count <= count - 1'b1 ;
-													state <= STATE_ADDR   ;
-												end
-										  end   // end addr state
+								if(count == 4'd0)
+									state <= STATE_RACK1;
+								else 
+									begin
+										count <= count - 1'b1 ;
+										state <= STATE_ADDR   ;
+									end
+							      end   // end addr state
 											
 						STATE_RACK1 : begin // read ack from slave 
-											if(i2c_sda == 1'b0) // ack is detected
-												begin
-													count <= 4'd7;													
-													// saved_addr[0] is 1 next_state is READ state
-													// else WRITE state
-													if(saved_addr[0] == 1'b1) 
-														state <= STATE_READ ;
-													else
-														state <= STATE_WRITE;
-												end
-											else  // ack is not detected
-												begin
-													state <= STATE_STOP;
-												end
-										  end   // end read sck state
+								if(i2c_sda == 1'b0) // ack is detected
+									begin
+										count <= 4'd7;													
+										// saved_addr[0] is 1 next_state is READ state
+										// else WRITE state
+										if(saved_addr[0] == 1'b1) 
+											state <= STATE_READ ;
+										else
+											state <= STATE_WRITE;
+									end
+								else  // ack is not detected
+									begin
+										state <= STATE_STOP;
+									end
+							      end   // end read sck state
 										  
 						STATE_WRITE : begin // write_state data write into slave  
-											if(count == 4'd0)
-												state <= STATE_RACK2;
-											else 
-												begin
-													count <= count - 1'b1;
-													state <= STATE_WRITE ;
-												end
+								if(count == 4'd0)
+									state <= STATE_RACK2;
+								else 
+									begin
+										count <= count - 1'b1;
+										state <= STATE_WRITE ;
+									end
 						              end   // end write state
 										  
 						STATE_RACK2 : begin // read ack state from slave after data receive
-											if((i2c_sda == 1'b0) && (enable == 1'b1))
-												state <= STATE_IDLE;
-											else
-												state <= STATE_STOP;												
-										  end   // end read ack state
+								if((i2c_sda == 1'b0) && (enable == 1'b1))
+									state <= STATE_IDLE;
+								else
+									state <= STATE_STOP;												
+							      end   // end read ack state
 										  
 						STATE_READ  : begin // read_state data read from slave
-											i2c_master_data_out[count] <= i2c_sda;
-											if(count == 4'd0)
-												state <= STATE_WACK;
-											else
-												begin
-													count <= count - 1'b1;
-													state <= STATE_READ  ;
-												end
-										  end   // end read state
+								i2c_master_data_out[count] <= i2c_sda;
+								if(count == 4'd0)
+									state <= STATE_WACK;
+								else
+									begin
+										count <= count - 1'b1;
+										state <= STATE_READ  ;
+									end
+							      end   // end read state
 										  
 						STATE_WACK  : begin // ack from master to slave
-											state <= STATE_STOP;
-										  end   // end write ack state
+								state <= STATE_STOP;
+							      end   // end write ack state
 										  
 						STATE_STOP  : begin // stop state
-											state <= STATE_IDLE;
-										  end   // end stop state
+								state <= STATE_IDLE;
+							      end   // end stop state
 					endcase
 				end
 		end
@@ -158,46 +158,46 @@ module i2c_fsm_controller(
 				begin
 					case(state)
 						STATE_IDLE  : begin // idle state
-											write_en <= 1'b1;
-											sda_out  <= 1'b1;
-										  end   // end idle
+								write_en <= 1'b1;
+								sda_out  <= 1'b1;
+							      end   // end idle
 										  
 						STATE_START : begin // start state
-											write_en <= 1'b1;
-											sda_out  <= 1'b0;	
-										  end   // end start
+								write_en <= 1'b1;
+								sda_out  <= 1'b0;	
+							      end   // end start
 										  
 						STATE_ADDR  : begin // addr state
-											write_en <= 1'b1             ;
-											sda_out  <= saved_addr[count];											
-										  end   // end addr
+								write_en <= 1'b1             ;
+								sda_out  <= saved_addr[count];											
+							      end   // end addr
 										  
 						STATE_RACK1 : begin // read ack state
-											write_en <= 1'b0;
-										  end   // end read ack
+								write_en <= 1'b0;
+							      end   // end read ack
 										  
 						STATE_WRITE : begin // data write state
-											write_en <= 1'b1                ;
-											sda_out  <= saved_data_wr[count];	 										
-										  end   // end data write
+								write_en <= 1'b1                ;
+								sda_out  <= saved_data_wr[count];	 										
+							      end   // end data write
 										  
 						STATE_RACK2 : begin // read ack state
-											write_en <= 1'b0;
-										  end   // end read ack
+								write_en <= 1'b0;
+							      end   // end read ack
 										  
 						STATE_READ  : begin // read data state
-											write_en <= 1'b0;
-										  end   // end read data
+								write_en <= 1'b0;
+							      end   // end read data
 										  
 						STATE_WACK  : begin // write ack state
-											write_en <= 1'b1;
-											sda_out  <= 1'b0;											
-										  end   // end write ack
+								write_en <= 1'b1;
+								sda_out  <= 1'b0;											
+							      end   // end write ack
 												
 						STATE_STOP  : begin // stop state
-											write_en <= 1'b1;
-											sda_out  <= 1'b1;											
-										  end   // end stop
+								write_en <= 1'b1;
+								sda_out  <= 1'b1;											
+							      end   // end stop
 					endcase
 				end
 		end
