@@ -13,7 +13,7 @@ module i2c_master_controller(
 	output       ready_out         , // master is ready to transfer addr and data
 	inout        i2c_sda_inout     , // serial data line
 	inout        i2c_scl_inout       // serial clock line
-									      );
+				      );
 	
 	// parameter & signal declaration
 	localparam DSIZE = 15;
@@ -48,17 +48,17 @@ module i2c_master_controller(
 	                                         );
 								  
 	// i2c_fifo instatiation
-	i2c_fifo #(.FIFO_WIDTH (DSIZE)        , // parameter instantiation for data size
-	           .FIFO_ADDR  (ASIZE)          // parameter instantiation for address size
-				                            ) i2c_fifo_inst
+	i2c_fifo #(.FIFO_WIDTH (DSIZE)          , // parameter instantiation for data size
+		   .FIFO_ADDR  (ASIZE)            // parameter instantiation for address size
+		  ) i2c_fifo_inst
 	          (.i2c_clock_in (i2c_clock_in) , // clock_port
-				  .i2c_reset_in (i2c_reset_in) , // reset_port
-				  .wr_en_in     (i2c_start)    , // fifo wr_en port
-				  .rd_en_in     (vld_master_en), // fifo rd_en port
-				  .data_in      (fifo_data_in) , // input data port
-				  .data_out     (fifo_data_out), // output data port
-				  .fifo_full    (fifo_full)    , // fifo full detection port
-				  .fifo_empty   (empty)          // fifo empty detection port
-				                              );
+		   .i2c_reset_in (i2c_reset_in) , // reset_port
+		   .wr_en_in     (i2c_start)    , // fifo wr_en port
+		   .rd_en_in     (vld_master_en), // fifo rd_en port
+		   .data_in      (fifo_data_in) , // input data port
+		   .data_out     (fifo_data_out), // output data port
+		   .fifo_full    (fifo_full)    , // fifo full detection port
+		   .fifo_empty   (empty)          // fifo empty detection port
+				               );
 
 endmodule
