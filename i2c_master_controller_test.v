@@ -115,8 +115,7 @@ module i2c_master_controller_test;
 			sda_in = 1'b0; #10;
 			sda_in = 1'b0; #10;
 			sda_in = 1'b1; #10;
-			bi_dir = 1'b0; #40;
-			
+			bi_dir = 1'b0; #40;			
 			$finish;
 		end
 	
