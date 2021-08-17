@@ -1,6 +1,6 @@
 
 // i2c fifo verilog coding
-
+`timescale 1ns/1ps
 module i2c_fifo #(parameter         FIFO_WIDTH = 15, // parameter for fifo data width
 	                            FIFO_ADDR  = 9 ) // parameter for fifo addr
 	(input                      i2c_clock_in   , // top module clock signal

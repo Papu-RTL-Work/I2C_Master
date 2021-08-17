@@ -1,6 +1,6 @@
 
 // I2C Master Controller Module
-
+`timescale 1ns/1ps
 module i2c_master_controller(
 	input        i2c_clock_in      , // top module clock signal
 	input        i2c_reset_in      , // active high reset signal

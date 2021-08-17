@@ -1,7 +1,7 @@
 
 // FSM Logic of I2C Master Controller
 // It has different states based on condition it goes to respective states
-
+`timescale 1ns/1ps
 module i2c_fsm_controller(
 	input            i2c_clock_in       , // top module clock signal
 	input            i2c_reset_in       , // active high reset signal
