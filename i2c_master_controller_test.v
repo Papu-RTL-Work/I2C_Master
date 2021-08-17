@@ -6,7 +6,6 @@ module i2c_master_controller_test;
 
 	// signal declaration
 	reg        sda_in            ; // regester store data_bit value
-	reg        bi_dir            ; // enable signal for i2c_sda line
 	reg        i2c_clock_in      ; // top module clock signal
 	reg        i2c_reset_in      ; // active high reset signal
 	reg        i2c_start         ; // start writing addr+data into fifo
@@ -42,7 +41,6 @@ module i2c_master_controller_test;
 			i2c_master_data_wr = 8'd0;
 			i2c_start          = 1'b0;
 			sda_in             = 1'b0;
-			bi_dir             = 1'b0;
 		end
 	endtask
 	
@@ -72,7 +70,7 @@ module i2c_master_controller_test;
 				#5 i2c_clock_in = ~i2c_clock_in;
 			end
 		
-	assign i2c_sda_inout = bi_dir ? sda_in : i2c_master_controller_inst.i2c_fsm_controller_inst.sda_out;
+	assign i2c_sda_inout = !i2c_master_controller_inst.i2c_fsm_controller_inst.write_en ? sda_in : 1'bz;
 	
 	initial 
 		begin
@@ -80,18 +78,15 @@ module i2c_master_controller_test;
 			clear     ;	
 			
 			// logic to write data & addr 
-			bi_dir = 1'b0                   ;
 			@(negedge i2c_clock_in)         ;
 			i2c_master_addr_wr = 7'b1010101 ;
 			i2c_master_data_wr = 8'b11010011;
 			enable                          ;
 			#100;	
 	
-			// read ack state1
-			bi_dir = 1'b1; 
+			// read ack state1 
 			sda_in = 1'b0;
 			#10;
-			bi_dir = 1'b0; 
 			#95;
 			
 			// logic to read data
@@ -103,7 +98,6 @@ module i2c_master_controller_test;
 			#100;
 			
 			// read ack state1
-			bi_dir = 1'b1; 
 			sda_in = 1'b0; #10;
 			
 			// read data
@@ -115,7 +109,7 @@ module i2c_master_controller_test;
 			sda_in = 1'b0; #10;
 			sda_in = 1'b0; #10;
 			sda_in = 1'b1; #10;
-			bi_dir = 1'b0; #40;			
+			#40;			
 			$finish;
 		end
 	
